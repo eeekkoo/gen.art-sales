@@ -1,10 +1,12 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-
+import { Image } from '@geist-ui/react'
 // - nice loader
 // - links to gen.art site (header)
 //
+
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 
 const Arrow = () => (
   <svg
@@ -137,7 +139,7 @@ export default function Home() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <div className="text-sm text-gray-600">Create by ekko</div>
+          <div className="text-sm text-gray-600">Created by ekko</div>
           <img src="/ekko.jpg" alt="meeee" className="h-8 ml-2 rounded-full" />
         </a>
       </footer>
@@ -168,6 +170,7 @@ function prettyDate(time) {
 
 function Sales({ title, data }) {
   const [showIndex, setShowIndex] = useState()
+  const [loadIndex, setLoadIndex] = useState()
   return (
     <div className="">
       <div className="max-w-2xl mx-auto py-16 px-4 sm:py-18 sm:px-6 lg:max-w-7xl lg:px-8">
@@ -183,7 +186,11 @@ function Sales({ title, data }) {
                 onMouseLeave={_ => setShowIndex(-1)}
                 className="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden lg:h-80 lg:aspect-none"
               >
+                {/* <SkeletonTheme color="#111" highlightColor="#222">
+                  <Skeleton height={600} count={1} />
+                </SkeletonTheme> */}
                 <img
+                  onLoad={_ => setLoadIndex(i)}
                   src={product.image_url}
                   alt={product.description}
                   className="w-full h-full object-center object-cover lg:w-full lg:h-full"
