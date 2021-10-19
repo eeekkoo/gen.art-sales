@@ -1,5 +1,10 @@
 import Head from 'next/head'
+import Link from 'next/link'
 import { useEffect, useState } from 'react'
+
+// - nice loader
+// - links to gen.art site (header)
+//
 
 const Arrow = () => (
   <svg
@@ -51,6 +56,7 @@ const GitHub = () => (
 export default function Home() {
   const [highestSales, setHighestSales] = useState([])
   const [recentSales, setRecentSales] = useState([])
+  const [loading, setLoading] = useState(true)
   useEffect(() => {
     const run = async () => {
       const sales = await fetch(
@@ -69,31 +75,72 @@ export default function Home() {
     }
     run()
   }, [])
+
+  useEffect(() => {
+    if (recentSales?.assets?.length && highestSales?.assets?.length) {
+      setTimeout(() => {
+        setLoading(false)
+      }, 750)
+    }
+  }, [highestSales, recentSales])
+
+  if (loading) {
+    return (
+      <div className="bg-black text-gray-200 w-full h-screen min-h-screen">
+        <div
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)'
+          }}
+        >
+          <img
+            src="/gen.art-logo.jpg"
+            alt="meeee"
+            className="h-36 rounded-full"
+          />
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="bg-black">
       <Head>
-        <title>Create Next App</title>
+        <title>gen.art sales</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <div className="w-full max-w-7xl m-auto px-6 text-gray-100">
+        <div className="sticky top-0 z-50 py-4 px-7 bg-black">
+          <Link href={'/'}>
+            <div className="cursor-pointer font-bold text-lg text-gray-100 ">
+              GEN.ART{' '}
+              <span className="text-xs font-normal text-gray-400">sales</span>
+            </div>
+          </Link>
+          {/* <img src="/gen.art-logo2.png" alt="meeee" className="h-6 ml-2 px-4" /> */}
+        </div>
         <Sales title={'Highest Sales'} data={highestSales} />
         <Sales title={'Recent Sales'} data={recentSales} />
-        <footer className="flex items-center justify-center w-full h-24 border-t border-gray-900">
-          <a
-            className="flex items-center justify-center"
-            href="https://twitter.com/DegenEkko"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img
-              src="/ekko.jpg"
-              alt="meeee"
-              className="h-12 ml-2 rounded-full"
-            />
-          </a>
-        </footer>
       </div>
+
+      <footer className="px-14 flex items-center justify-between w-full h-24 border-t border-gray-900">
+        <a className="flex items-center" href="https://gen.art" target="_blank">
+          <div className="mr-1 text-gray-600">gen.art</div>
+          <Arrow />
+        </a>
+        <a
+          className="flex items-center justify-center"
+          href="https://twitter.com/DegenEkko"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <div className="text-sm text-gray-600">Create by ekko</div>
+          <img src="/ekko.jpg" alt="meeee" className="h-8 ml-2 rounded-full" />
+        </a>
+      </footer>
     </div>
   )
 }
